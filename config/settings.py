@@ -100,3 +100,8 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # URL do backend que o chat utiliza para enviar mensagens.
 BACKEND_CHAT_URL = os.getenv(
     "BACKEND_CHAT_URL", "http://127.0.0.1:8000/api/chat/")
+
+
+LOGIN_URL = "login"
+LOGIN_REDIRECT_URL = "index"
+LOGOUT_REDIRECT_URL = "login"

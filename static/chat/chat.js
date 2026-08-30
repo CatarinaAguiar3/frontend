@@ -12,7 +12,7 @@ function scrollToBottom() {
   chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
-function createMessage(role, text, isTyping = false) {
+function createMessage(role, text, isTyping = false, chartBase64 = null) {
   // Cria a estrutura visual de uma mensagem para usuario ou assistente.
   const wrapper = document.createElement("article");
   wrapper.className = `message message--${role}`;
@@ -37,6 +37,19 @@ function createMessage(role, text, isTyping = false) {
     const content = document.createElement("div");
     content.textContent = text;
     bubble.appendChild(content);
+    if (chartBase64) {
+      // Se houver um gráfico em base64, adiciona a imagem abaixo do texto.
+      const chartImage = document.createElement("img");
+      chartImage.src = `data:image/png;base64,${chartBase64}`;
+      chartImage.alt = "Gráfico gerado";
+      chartImage.style.maxWidth = "100%";
+      chartImage.style.marginTop = "10px";
+      chartImage.style.borderRadius = "8px";
+
+      // Adiciona a imagem do gráfico à bolha da mensagem.
+      bubble.appendChild(chartImage);
+    }
+
   }
 
   wrapper.appendChild(bubble);
@@ -52,14 +65,15 @@ function setLoading(isLoading) {
   sendButton.textContent = isLoading ? "Processando..." : "Enviar comando";
 }
 
-function appendBotMessage(text) {
+function appendBotMessage(text, chartBase64 = null) {
   // Adiciona uma resposta simples do assistente na conversa.
-  createMessage("assistant", text || "Sem resposta do backend.");
+  createMessage("assistant", text || "Sem resposta do backend.", false, chartBase64);
 }
 
 async function sendMessage(text) {
   // Normaliza a mensagem antes do envio.
   const typedMessage = text.trim();
+  console.log("Mensagem digitada:", typedMessage);
   if (!typedMessage) {
     return;
   }
@@ -84,6 +98,11 @@ async function sendMessage(text) {
 
     // Lê a resposta do backend como objeto JavaScript.
     const payload = await response.json();
+
+    console.log("Resposta do backend:", payload);
+    console.log("Texto da mensagem do backend:", payload.reply || playload.error);
+
+
     typingIndicator.remove();
 
     if (!response.ok) {
@@ -93,7 +112,7 @@ async function sendMessage(text) {
     }
 
     // Mostra a resposta final gerada pelo backend.
-    appendBotMessage(payload.reply);
+    appendBotMessage(payload.reply, payload.chart);
   } catch (error) {
     // Trata falhas de rede ou indisponibilidade do backend.
     typingIndicator.remove();

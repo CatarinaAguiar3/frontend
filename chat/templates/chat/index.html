@@ -45,9 +45,15 @@
           <p class="mb-1 chat-title">Chat operacional</p>
           <small class="chat-subtitle">Digite uma instrução em português e acompanhe a resposta do modelo.</small>
         </div>
-        <div class="status-pill">
-          <span class="status-dot"></span>
-          Conectado ao backend
+        <div class="d-flex align-items-center gap-3">
+          <div class="status-pill">
+            <span class="status-dot"></span>
+            Conectado ao backend
+          </div>
+          <div class="text-end">
+            <small class="d-block text-warning">Logado como <strong>{{ user.username }}</strong></small>
+            <a href="{% url 'logout' %}" class="btn btn-sm btn-outline-warning">Sair</a>
+          </div>
         </div>
       </header>
 
@@ -57,6 +63,7 @@
         <button class="suggestion-chip" type="button" data-message="Atualize a idade do aluno José para 35 anos.">Atualizar idade</button>
         <button class="suggestion-chip" type="button" data-message="Liste todos os alunos cadastrados.">Listar alunos</button>
         <button class="suggestion-chip" type="button" data-message="Remova o aluno Maria.">Remover aluno</button>
+        <button class="suggestion-chip" type="button" data-message="Crie uma tabela chamada professores com os campos: id (INT, chave primária, auto incremento), nome (VARCHAR(100), não nulo), disciplina (VARCHAR(50), não nulo) e departamento_id (INT, chave estrangeira referenciando a tabela departamentos)."> Criar tabela</button>
       </div>
 
       {# Container onde as mensagens da conversa sao renderizadas. #}
